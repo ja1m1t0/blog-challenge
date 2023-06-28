@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
 let posts = [];
 
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -39,6 +40,8 @@ app.get("/c", function (req, res) {
   res.render("compose");
 });
 
+
+
 app.post("/c", function (req, res) {
   const post = {
     title: req.body.postTitle,
@@ -51,11 +54,21 @@ app.post("/c", function (req, res) {
 
 app.get("/posts/:post", function (req, res) {
 
-  const requestedTitle = req.params.post;
+  const requestedTitle = _.lowerCase(req.params.post);
+  // const requestedTitleLower = toLower(requestedTitle);
+  // console.log(requestedTitleLower);
 
   posts.forEach(function (post) {
-    if (post.title === requestedTitle) {
-      console.log("Match found!")
+    // console.log(lowerCase(post.title));
+
+    if (_.lowerCase(post.title) === requestedTitle) {
+      // app.get("/posts/" + requestedTitle, function (req, res) {
+      res.render("post", {
+        title: post.title,
+        body: post.content
+      });
+
+      // })
     }
   })
 
